@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mates Cicle Superior - Jocs Interactius</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+        }
+        .btn-press:active {
+            transform: scale(0.97);
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .animate-shake {
+            animation: shake 0.3s ease-in-out;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: pop 0.25s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <!-- Capçalera -->
+    <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="goHome()">
+                <div class="bg-white text-indigo-600 p-2 rounded-xl font-display font-bold text-xl shadow-sm">
+                    🧮 MatesCS
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-lg sm:text-xl leading-tight">Aventura Matemàtica</h1>
+                    <p class="text-indigo-200 text-xs hidden sm:block">Cicle Superior · Reptes Infinits</p>
+                </div>
+            </div>
+
+            <!-- Marcador -->
+            <div class="flex items-center gap-3 sm:gap-4 bg-indigo-700/80 px-4 py-1.5 rounded-2xl border border-indigo-500/50">
+                <div class="flex items-center gap-1.5" title="Punts totals">
+                    <span class="text-yellow-300 text-lg">⭐</span>
+                    <span id="score-display" class="font-display font-bold text-lg">0</span>
+                </div>
+                <div class="h-4 w-px bg-indigo-500"></div>
+                <div class="flex items-center gap-1.5" title="Ratxa d'encerts">
+                    <span class="text-orange-400 text-lg">🔥</span>
+                    <span id="streak-display" class="font-display font-bold text-lg">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contingut Principal -->
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-6 sm:py-8">
+
+        <!-- MENÚ PRINCIPAL -->
+        <section id="menu-view" class="space-y-8 animate-pop">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-800">Tria un repte matemàtic!</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Cada vegada que juguis es crearan exercicis nous. Aconsegueix punts i mantén la ratxa!</p>
+            </div>
+
+            <!-- Bloc 1: Numeració -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-2 border-b-2 border-indigo-200 pb-2">
+                    <span class="bg-indigo-100 text-indigo-700 p-1.5 rounded-lg text-lg">🔢</span>
+                    <h3 class="text-xl font-bold text-indigo-900">1. Numeració (fins a les centenes de milió)</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Joc 1.1 -->
+                    <button onclick="startGame('num_read_write')" class="card-hover btn-press bg-white p-5 rounded-2xl shadow-sm border-2 border-slate-100 hover:border-indigo-400 text-left flex flex-col justify-between group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">✍️</div>
+                            <h4 class="font-display font-bold text-lg text-slate-800 mb-1">Lectura i Escriptura</h4>
+                            <p class="text-sm text-slate-500">Passa de xifres a lletres i de lletres a xifres fins a 999.999.999.</p>
+                        </div>
+                        <span class="mt-4 inline-flex items-center text-xs font-semibold text-blue-600">Jugar ara →</span>
+                    </button>
+
+                    <!-- Joc 1.2 -->
+                    <button onclick="startGame('num_prev_next')" class="card-hover btn-press bg-white p-5 rounded-2xl shadow-sm border-2 border-slate-100 hover:border-indigo-400 text-left flex flex-col justify-between group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">↔️</div>
+                            <h4 class="font-display font-bold text-lg text-slate-800 mb-1">Anterior i Posterior</h4>
+                            <p class="text-sm text-slate-500">Descobreix quin nombre va just abans o just després, vigilant els zeros!</p>
+                        </div>
+                        <span class="mt-4 inline-flex items-center text-xs font-semibold text-cyan-600">Jugar ara →</span>
+                    </button>
+
+                    <!-- Joc 1.3 -->
+                    <button onclick="startGame('num_rounding')" class="card-hover btn-press bg-white p-5 rounded-2xl shadow-sm border-2 border-slate-100 hover:border-indigo-400 text-left flex flex-col justify-between group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">🎯</div>
+                            <h4 class="font-display font-bold text-lg text-slate-800 mb-1">Aproximació i Arrodoniment</h4>
+                            <p class="text-sm text-slate-500">Arrodoneix a les desenes, centenes, milers o milions més propers.</p>
+                        </div>
+                        <span class="mt-4 inline-flex items-center text-xs font-semibold text-teal-600">Jugar ara →</span>
+                    </button>
+
+                    <!-- Joc 1.4 -->
+                    <button onclick="startGame('num_place_value')" class="card-hover btn-press bg-white p-5 rounded-2xl shadow-sm border-2 border-slate-100 hover:border-indigo-400 text-left flex flex-col justify-between group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">🏛️</div>
+                            <h4 class="font-display font-bold text-lg text-slate-800 mb-1">Valor Posicional</h4>
+                            <p class="text-sm text-slate-500">Identifica la posició d'una xifra (UMM, CM, DM...) i el seu valor en unitats.</p>
+                        </div>
+                        <span class="mt-4 inline-flex items-center text-xs font-semibold text-indigo-600">Jugar ara →</span>
+                    </button>
+
+                    <!-- Joc 1.5 -->
+                    <button onclick="startGame('num_equivalence')" class="card-hover btn-press bg-white p-5 rounded-2xl shadow-sm border-2 border-slate-100 hover:border-indigo-400 text-left flex flex-col justify-between group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">⚖️</div>
+                            <h4 class="font-display font-bold text-lg text-slate-800 mb-1">Equivalència en Unitats</h4>
+                            <p class="text-sm text-slate-500">Quantes unitats són 45 DM? I 3 CMM? Practica les equivalències!</p>
+                        </div>
+                        <span class="mt-4 inline-flex items-center text-xs font-semibold text-purple-600">Jugar ara →</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bloc 2: Operacions i Problemes -->
+            <div class="space-y-4 pt-2">
+                <div class="flex items-center gap-2 border-b-2 border-amber-200 pb-2">
+                    <span class="bg-amber-100 text-amber-700 p-1.5 rounded-lg text-lg">🧠</span>
+                    <h3 class="text-xl font-bold text-amber-900">2. Operacions Combinades i Problemes</h3>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Joc 2.1 -->
+                    <button onclick="startGame('comb_ops')" class="card-hover btn-press bg-white p-5 rounded-2xl shadow-sm border-2 border-slate-100 hover:border-amber-400 text-left flex flex-col justify-between group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">⚡</div>
+                            <h4 class="font-display font-bold text-lg text-slate-800 mb-1">Operacions Combinades</h4>
+                            <p class="text-sm text-slate-500">Resol càlculs amb sumes, restes, multiplicacions, divisions i parèntesis seguint la jerarquia.</p>
+                        </div>
+                        <span class="mt-4 inline-flex items-center text-xs font-semibold text-amber-600">Jugar ara →</span>
+                    </button>
+
+                    <!-- Joc 2.2 -->
+                    <button onclick="startGame('word_problems')" class="card-hover btn-press bg-white p-5 rounded-2xl shadow-sm border-2 border-slate-100 hover:border-rose-400 text-left flex flex-col justify-between group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">📝</div>
+                            <h4 class="font-display font-bold text-lg text-slate-800 mb-1">Transcriure Problemes</h4>
+                            <p class="text-sm text-slate-500">Llegeix el problema i tria o escriu l'operació combinada exacta que el resol.</p>
+                        </div>
+                        <span class="mt-4 inline-flex items-center text-xs font-semibold text-rose-600">Jugar ara →</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ÀREA DE JOC -->
+        <section id="game-view" class="hidden max-w-3xl mx-auto animate-pop">
+            <!-- Barra superior del joc -->
+            <div class="flex items-center justify-between mb-4">
+                <button onclick="goHome()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium text-sm shadow-sm border border-slate-200 transition-colors">
+                    ← Tornar al menú
+                </button>
+                <span id="game-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-100 text-indigo-700">
+                    Categoria
+                </span>
+            </div>
+
+            <!-- Targeta del Repte -->
+            <div class="bg-white rounded-3xl shadow-md border border-slate-200/80 overflow-hidden">
+                <!-- Capçalera de la pregunta -->
+                <div class="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+                    <h3 id="game-title" class="font-display font-bold text-xl text-slate-800">Títol del joc</h3>
+                    <button onclick="toggleHint()" id="hint-btn" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
+                        💡 Ajuda / Recordatori
+                    </button>
+                </div>
+
+                <!-- Caixa d'ajuda desplegable -->
+                <div id="hint-box" class="hidden bg-amber-50 border-b border-amber-200/60 px-6 py-3 text-sm text-amber-900">
+                    <p id="hint-text"></p>
+                </div>
+
+                <!-- Cos de la pregunta -->
+                <div class="p-6 sm:p-8 space-y-6">
+                    <div id="question-container" class="space-y-4">
+                        <!-- S'omple dinàmicament -->
+                    </div>
+
+                    <!-- Zona de resposta -->
+                    <div id="answer-container" class="space-y-4">
+                        <!-- S'omple dinàmicament (input o opcions múltiples) -->
+                    </div>
+
+                    <!-- Zona de feedback -->
+                    <div id="feedback-box" class="hidden rounded-2xl p-4 text-sm sm:text-base font-medium flex items-start gap-3">
+                        <span id="feedback-icon" class="text-2xl"></span>
+                        <div class="space-y-1 flex-grow">
+                            <p id="feedback-title" class="font-bold"></p>
+                            <p id="feedback-explanation" class="text-xs sm:text-sm opacity-90"></p>
+                        </div>
+                    </div>
+
+                    <!-- Botons d'acció -->
+                    <div class="pt-2 flex flex-wrap items-center justify-end gap-3">
+                        <button id="check-btn" onclick="checkAnswer()" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-display font-bold rounded-xl shadow-md hover:shadow-lg transition-all btn-press">
+                            Comprova la resposta
+                        </button>
+                        <button id="next-btn" onclick="nextQuestion()" class="hidden w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold rounded-xl shadow-md hover:shadow-lg transition-all btn-press">
+                            Següent repte →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Peu de pàgina -->
+    <footer class="text-center py-4 text-xs text-slate-400">
+        Recurs interactiu de Matemàtiques per a Cicle Superior · Generació infinita d'exercicis
+    </footer>
+
+    <script>
+        // --- ESTAT GLOBAL DE L'APLICACIÓ ---
+        let state = {
+            score: 0,
+            streak: 0,
+            currentGame: null,
+            currentQuestion: null,
+            answered: false,
+            selectedOption: null
+        };
+
+        // --- UTILITATS DE FORMAT I NOMBRES EN CATALÀ ---
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function cleanNumberInput(str) {
+            return str.replace(/[\.\s]/g, '').trim();
+        }
+
+        function randInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function pickRandom(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // Convertidor complet de nombres a lletres en català (normativa D-U-C)
+        function numberToCatalan(n) {
+            if (n === 0) return "zero";
+
+            const units = ["", "un", "dos", "tres", "quatre", "cinc", "sis", "set", "vuit", "nou"];
+            const teens = ["deu", "onze", "dotze", "tretze", "catorze", "quinze", "setze", "disset", "divuit", "dinou"];
+            const tens = ["", "", "vint", "trenta", "quaranta", "cinquanta", "seixanta", "setanta", "vuitanta", "noranta"];
+
+            function convertHundreds(num) {
+                let res = [];
+                const h = Math.floor(num / 100);
+                const rem = num % 100;
+
+                if (h > 0) {
+                    if (h === 1) res.push("cent");
+                    else res.push(units[h] + "-cents");
+                }
+
+                if (rem > 0) {
+                    if (rem < 10) {
+                        res.push(units[rem]);
+                    } else if (rem < 20) {
+                        res.push(teens[rem - 10]);
+                    } else {
+                        const t = Math.floor(rem / 10);
+                        const u = rem % 10;
+                        if (u === 0) {
+                            res.push(tens[t]);
+                        } else if (t === 2) {
+                            res.push("vint-i-" + units[u]);
+                        } else {
+                            res.push(tens[t] + "-" + units[u]);
+                        }
+                    }
+                }
+                return res.join(" ");
+            }
+
+            let parts = [];
+            const millions = Math.floor(n / 1000000);
+            const thousands = Math.floor((n % 1000000) / 1000);
+            const rest = n % 1000;
+
+            if (millions > 0) {
+                if (millions === 1) parts.push("un milió");
+                else parts.push(convertHundreds(millions) + " milions");
+            }
+
+            if (thousands > 0) {
+                if (thousands === 1) parts.push("mil");
+                else parts.push(convertHundreds(thousands) + " mil");
+            }
+
+            if (rest > 0) {
+                parts.push(convertHundreds(rest));
+            }
+
+            return parts.join(" ");
+        }
+
+        // --- NAVEGACIÓ I UI ---
+        function updateScoreUI() {
+            document.getElementById('score-display').textContent = state.score;
+            document.getElementById('streak-display').textContent = state.streak;
+        }
+
+        function goHome() {
+            document.getElementById('game-view').classList.add('hidden');
+            document.getElementById('menu-view').classList.remove('hidden');
+            state.currentGame = null;
+        }
+
+        function toggleHint() {
+            const box = document.getElementById('hint-box');
+            box.classList.toggle('hidden');
+        }
+
+        function startGame(gameId) {
+            state.currentGame = gameId;
+            document.getElementById('menu-view').classList.add('hidden');
+            document.getElementById('game-view').classList.remove('hidden');
+            document.getElementById('hint-box').classList.add('hidden');
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            state.answered = false;
+            state.selectedOption = null;
+            document.getElementById('feedback-box').classList.add('hidden');
+            document.getElementById('check-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+
+            const generator = gameGenerators[state.currentGame];
+            state.currentQuestion = generator();
+            renderQuestion(state.currentQuestion);
+        }
+
+        // --- GENERADORS D'EXERCICIS INFINITS ---
+        const gameGenerators = {
+            // 1.1 Lectura i escriptura
+            num_read_write: () => {
+                // Generem nombres de 7 a 9 xifres (milions, desenes de milió, centenes de milió)
+                const digits = pickRandom([7, 8, 9]);
+                const min = Math.pow(10, digits - 1);
+                const max = Math.pow(10, digits) - 1;
+                // A vegades posem zeros estratègics
+                let num = randInt(min, max);
+                if (Math.random() > 0.5) {
+                    num = Math.floor(num / 1000) * 1000 + randInt(0, 99);
+                }
+
+                const mode = Math.random() > 0.45 ? 'words_to_num' : 'num_to_words';
+                const words = numberToCatalan(num);
+
+                if (mode === 'words_to_num') {
+                    return {
+                        badge: "Numeració",
+                        title: "Lectura i Escriptura (a xifres)",
+                        hint: "Separa el nombre per grups de tres xifres començant per la dreta: unitats, milers i milions. Si falta algun ordre, posa-hi un 0!",
+                        prompt: `Escriu amb xifres el següent nombre:`,
+                        highlight: `"${words.charAt(0).toUpperCase() + words.slice(1)}"`,
+                        type: 'input',
+                        placeholder: 'Ex: 125.040.300',
+                        correctAnswer: num.toString(),
+                        explanation: `El nombre "${words}" s'escriu ${formatNumber(num)}.`
+                    };
+                } else {
+                    // Generem 3 distractors creïbles
+                    let distractors = new Set();
+                    while (distractors.size < 3) {
+                        let fakeNum = num;
+                        const r = Math.random();
+                        if (r < 0.33 && num > 1000000) {
+                            // Canviar milions per milers o treure un zero
+                            fakeNum = Math.floor(num / 10);
+                        } else if (r < 0.66) {
+                            // Alterar una xifra
+                            const pos = Math.pow(10, randInt(1, digits - 2));
+                            fakeNum = num + (Math.random() > 0.5 ? pos : -pos);
+                        } else {
+                            // Intercanviar desenes/unitats
+                            fakeNum = num + randInt(1, 9) * 1000;
+                        }
+                        if (fakeNum > 0 && fakeNum !== num) {
+                            distractors.add(numberToCatalan(fakeNum));
+                        }
+                    }
+
+                    const options = [words, ...Array.from(distractors)].sort(() => Math.random() - 0.5);
+
+                    return {
+                        badge: "Numeració",
+                        title: "Lectura i Escriptura (a lletres)",
+                        hint: "Recorda la regla D-U-C en català: s'escriu guionet entre les desenes i les unitats (ex: trenta-quatre) i entre les unitats i centenes (ex: dos-cents).",
+                        prompt: `Com es llegeix correctament aquest nombre?`,
+                        highlight: formatNumber(num),
+                        type: 'choice',
+                        options: options.map(o => o.charAt(0).toUpperCase() + o.slice(1)),
+                        correctAnswer: words.charAt(0).toUpperCase() + words.slice(1),
+                        explanation: `El nombre ${formatNumber(num)} es llegeix: "${words}".`
+                    };
+                }
+            },
+
+            // 1.2 Anterior i Posterior
+            num_prev_next: () => {
+                // Nombre amb molts zeros al final o al mig per treballar el canvi d'ordre
+                const bases = [1000000, 10000000, 100000000, 5000000, 24000000, 130000000, 99999999, 40500000];
+                let base = pickRandom(bases);
+                if (Math.random() > 0.4) {
+                    base = randInt(10, 990) * 100000;
+                }
+                const isPrev = Math.random() > 0.5;
+                // Si busquem l'anterior, posem un nombre acabat en zeros (ex: 45.000.000 -> 44.999.999)
+                // Si busquem el posterior, posem un nombre acabat en nous (ex: 44.999.999 -> 45.000.000)
+                const shownNum = isPrev ? base : base - 1;
+                const targetNum = isPrev ? base - 1 : base;
+
+                return {
+                    badge: "Numeració",
+                    title: "Anterior i Posterior",
+                    hint: isPrev 
+                        ? "Per trobar l'anterior, resta 1. Fixa't com els zeros de la dreta es converteixen en nous!" 
+                        : "Per trobar el posterior, suma 1. Els nous de la dreta passen a ser zeros i augmenta la xifra següent!",
+                    prompt: isPrev 
+                        ? `Quin nombre va just ABANS (anterior) de:` 
+                        : `Quin nombre va just DESPRÉS (posterior) de:`,
+                    highlight: formatNumber(shownNum),
+                    type: 'input',
+                    placeholder: 'Escriu el nombre...',
+                    correctAnswer: targetNum.toString(),
+                    explanation: isPrev 
+                        ? `${formatNumber(shownNum)} - 1 = ${formatNumber(targetNum)}.`
+                        : `${formatNumber(shownNum)} + 1 = ${formatNumber(targetNum)}.`
+                };
+            },
+
+            // 1.3 Aproximació / Arrodoniment
+            num_rounding: () => {
+                const num = randInt(12000000, 985000000);
+                const levels = [
+                    { name: "centenes", factor: 100 },
+                    { name: "unitats de miler", factor: 1000 },
+                    { name: "desenes de miler", factor: 10000 },
+                    { name: "centenes de miler", factor: 100000 },
+                    { name: "unitats de milió", factor: 1000000 },
+                    { name: "desenes de milió", factor: 10000000 }
+                ];
+                const chosen = pickRandom(levels);
+                const rounded = Math.round(num / chosen.factor) * chosen.factor;
+                const nextDigit = Math.floor((num % chosen.factor) / (chosen.factor / 10));
+
+                return {
+                    badge: "Numeració",
+                    title: "Aproximació i Arrodoniment",
+                    hint: "Mira la xifra que hi ha just a la dreta de l'ordre al qual vols arrodonir: si és 0, 1, 2, 3 o 4, es queda igual. Si és 5, 6, 7, 8 o 9, suma 1!",
+                    prompt: `Arrodoneix aquest nombre a les ${chosen.name.toUpperCase()}:`,
+                    highlight: formatNumber(num),
+                    type: 'input',
+                    placeholder: 'Escriu el nombre arrodonit...',
+                    correctAnswer: rounded.toString(),
+                    explanation: `Com que la xifra següent a les ${chosen.name} és un ${nextDigit}, ${nextDigit >= 5 ? 'pugem una unitat' : 'mantenim la xifra'} i omplim la resta amb zeros: ${formatNumber(rounded)}.`
+                };
+            },
+
+            // 1.4 Valor Posicional
+            num_place_value: () => {
+                // Generem un nombre de 9 xifres on totes les xifres siguin diferents per evitar ambigüitats!
+                const pool = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                pool.sort(() => Math.random() - 0.5);
+                const numStr = pool.join('');
+                const num = parseInt(numStr, 10);
+
+                const positions = [
+                    { index: 0, abbr: "CMM", full: "Centenes de milió", mult: 100000000 },
+                    { index: 1, abbr: "DMM", full: "Desenes de milió", mult: 10000000 },
+                    { index: 2, abbr: "UMM", full: "Unitats de milió", mult: 1000000 },
+                    { index: 3, abbr: "CM", full: "Centenes de miler", mult: 100000 },
+                    { index: 4, abbr: "DM", full: "Desenes de miler", mult: 10000 },
+                    { index: 5, abbr: "UM", full: "Unitats de miler", mult: 1000 },
+                    { index: 6, abbr: "C", full: "Centenes", mult: 100 },
+                    { index: 7, abbr: "D", full: "Desenes", mult: 10 },
+                    { index: 8, abbr: "U", full: "Unitats", mult: 1 }
+                ];
+
+                const targetPos = pickRandom(positions.slice(0, 7)); // Prioritzem milers i milions
+                const digit = parseInt(numStr[targetPos.index], 10);
+                const askValue = Math.random() > 0.5;
+
+                // Formatem el nombre destacant la xifra amb HTML
+                let formattedHtml = "";
+                for (let i = 0; i < 9; i++) {
+                    if (i === 3 || i === 6) formattedHtml += ".";
+                    if (i === targetPos.index) {
+                        formattedHtml += `<span class="text-indigo-600 underline decoration-4 decoration-amber-400 px-0.5">${numStr[i]}</span>`;
+                    } else {
+                        formattedHtml += numStr[i];
+                    }
+                }
+
+                if (askValue) {
+                    const val = digit * targetPos.mult;
+                    return {
+                        badge: "Numeració",
+                        title: "Valor Posicional",
+                        hint: "Recorda l'ordre de dreta a esquerra: U, D, C | UM, DM, CM | UMM, DMM, CMM.",
+                        prompt: `Quin valor en UNITATS té la xifra destacada (${digit}) en aquest nombre?`,
+                        highlightHtml: formattedHtml,
+                        type: 'input',
+                        placeholder: 'Ex: 400.000',
+                        correctAnswer: val.toString(),
+                        explanation: `El ${digit} ocupa el lloc de les ${targetPos.full} (${targetPos.abbr}), per tant val ${digit} × ${formatNumber(targetPos.mult)} = ${formatNumber(val)} unitats.`
+                    };
+                } else {
+                    const options = [
+                        `${targetPos.full} (${targetPos.abbr})`,
+                        ...positions.filter(p => p.abbr !== targetPos.abbr).sort(() => Math.random() - 0.5).slice(0, 3).map(p => `${p.full} (${p.abbr})`)
+                    ].sort(() => Math.random() - 0.5);
+
+                    return {
+                        badge: "Numeració",
+                        title: "Valor Posicional",
+                        hint: "Separa mentalment el nombre en grups de tres des de la dreta: unitats, milers i milions.",
+                        prompt: `Quina posició ocupa la xifra destacada (${digit}) en aquest nombre?`,
+                        highlightHtml: formattedHtml,
+                        type: 'choice',
+                        options: options,
+                        correctAnswer: `${targetPos.full} (${targetPos.abbr})`,
+                        explanation: `En el nombre ${formatNumber(num)}, el ${digit} està situat a les ${targetPos.full} (${targetPos.abbr}).`
+                    };
+                }
+            },
+
+            // 1.5 Equivalència en Unitats
+            num_equivalence: () => {
+                const unitsList = [
+                    { abbr: "D", name: "desenes", mult: 10 },
+                    { abbr: "C", name: "centenes", mult: 100 },
+                    { abbr: "UM", name: "unitats de miler", mult: 1000 },
+                    { abbr: "DM", name: "desenes de miler", mult: 10000 },
+                    { abbr: "CM", name: "centenes de miler", mult: 100000 },
+                    { abbr: "UMM", name: "unitats de milió", mult: 1000000 },
+                    { abbr: "DMM", name: "desenes de milió", mult: 10000000 },
+                    { abbr: "CMM", name: "centenes de milió", mult: 100000000 }
+                ];
+
+                const chosen = pickRandom(unitsList);
+                // Si és CMM o DMM, agafem un nombre d'1 xifra per no passar-nos de centenes de milió
+                const maxQty = chosen.mult >= 10000000 ? 9 : (chosen.mult >= 100000 ? 85 : 350);
+                const qty = randInt(2, maxQty);
+                const totalUnits = qty * chosen.mult;
+
+                return {
+                    badge: "Numeració",
+                    title: "Equivalència en Unitats",
+                    hint: "Multiplica la quantitat pel valor de cada ordre: 1 UM = 1.000 U, 1 DM = 10.000 U, 1 CM = 100.000 U, 1 UMM = 1.000.000 U...",
+                    prompt: `A quantes UNITATS equival aquesta expressió?`,
+                    highlight: `${qty} ${chosen.abbr} (${qty} ${chosen.name})`,
+                    type: 'input',
+                    placeholder: 'Escriu el total en unitats...',
+                    correctAnswer: totalUnits.toString(),
+                    explanation: `Com que 1 ${chosen.abbr} = ${formatNumber(chosen.mult)} unitats, llavors ${qty} ${chosen.abbr} = ${qty} × ${formatNumber(chosen.mult)} = ${formatNumber(totalUnits)} unitats.`
+                };
+            },
+
+            // 2.1 Operacions Combinades (Resolució pas a pas)
+            comb_ops: () => {
+                const patterns = [
+                    // Patró 1: a + b * c - d (2 passos: multiplicació -> suma/resta)
+                    () => {
+                        const b = randInt(3, 9);
+                        const c = randInt(4, 12);
+                        const a = randInt(10, 40);
+                        const d = randInt(2, a + b * c - 1);
+                        const step1 = `${a} + ${b * c} − ${d}`;
+                        const ans = a + (b * c) - d;
+                        return {
+                            expr: `${a} + ${b} × ${c} − ${d}`,
+                            expectedSteps: [
+                                {
+                                    validForms: [step1, `${a}+${b*c}-${d}`]
+                                }
+                            ],
+                            ans: ans,
+                            steps: `1r multiplicació: ${b} × ${c} = ${b*c} → (${step1}). Després d'esquerra a dreta: ${ans}.`
+                        };
+                    },
+                    // Patró 2: (a + b) * c - d (3 passos: parèntesi -> multiplicació -> resta)
+                    () => {
+                        const a = randInt(4, 15);
+                        const b = randInt(3, 12);
+                        const c = randInt(2, 6);
+                        const d = randInt(1, (a + b) * c - 2);
+                        const sum = a + b;
+                        const prod = sum * c;
+                        const ans = prod - d;
+                        return {
+                            expr: `(${a} + ${b}) × ${c} − ${d}`,
+                            expectedSteps: [
+                                {
+                                    validForms: [`${sum} × ${c} − ${d}`, `${sum}*${c}-${d}`, `${sum}x${c}-${d}`]
+                                },
+                                {
+                                    validForms: [`${prod} − ${d}`, `${prod}-${d}`]
+                                }
+                            ],
+                            ans: ans,
+                            steps: `1r parèntesi: (${a} + ${b}) = ${sum} → ${sum} × ${c} − ${d}. 2n multiplicació: ${sum} × ${c} = ${prod} → ${prod} − ${d}. Finalment: ${ans}.`
+                        };
+                    },
+                    // Patró 3: a - (b + c) + d : e (3 passos: parèntesi -> divisió -> sumes/restes)
+                    () => {
+                        const e = randInt(2, 8);
+                        const quot = randInt(3, 10);
+                        const d = e * quot;
+                        const b = randInt(4, 12);
+                        const c = randInt(3, 10);
+                        const a = randInt(b + c + 5, b + c + 35);
+                        const sum = b + c;
+                        const ans = a - sum + quot;
+                        return {
+                            expr: `${a} − (${b} + ${c}) + ${d} : ${e}`,
+                            expectedSteps: [
+                                {
+                                    validForms: [`${a} − ${sum} + ${d} : ${e}`, `${a}-${sum}+${d}:${e}`, `${a}-${sum}+${d}/${e}`]
+                                },
+                                {
+                                    validForms: [`${a} − ${sum} + ${quot}`, `${a}-${sum}+${quot}`]
+                                }
+                            ],
+                            ans: ans,
+                            steps: `1r parèntesi: (${b} + ${c}) = ${sum} → ${a} − ${sum} + ${d} : ${e}. 2n divisió: ${d} : ${e} = ${quot} → ${a} − ${sum} + ${quot}. Finalment: ${ans}.`
+                        };
+                    },
+                    // Patró 4: (a - b) : c + d * e (3 passos: parèntesi -> divisió i multiplicació -> suma)
+                    () => {
+                        const c = randInt(2, 7);
+                        const quot = randInt(3, 9);
+                        const b = randInt(4, 15);
+                        const a = b + (c * quot);
+                        const d = randInt(3, 8);
+                        const e = randInt(2, 7);
+                        const diff = a - b;
+                        const prod = d * e;
+                        const ans = quot + prod;
+                        return {
+                            expr: `(${a} − ${b}) : ${c} + ${d} × ${e}`,
+                            expectedSteps: [
+                                {
+                                    validForms: [`${diff} : ${c} + ${d} × ${e}`, `${diff}:${c}+${d}*${e}`, `${diff}/${c}+${d}x${e}`]
+                                },
+                                {
+                                    validForms: [`${quot} + ${prod}`, `${quot}+${prod}`]
+                                }
+                            ],
+                            ans: ans,
+                            steps: `1r parèntesi: (${a} − ${b}) = ${diff} → ${diff} : ${c} + ${d} × ${e}. 2n divisió i multiplicació: ${quot} + ${prod}. Suma final: ${ans}.`
+                        };
+                    }
+                ];
+
+                const chosen = pickRandom(patterns)();
+                return {
+                    badge: "Operacions Combinades",
+                    title: "Resol l'operació combinada pas a pas",
+                    hint: "Recorda la jerarquia de les operacions: 1r Parèntesis ( ) → 2n Multiplicacions (× o *) i Divisions (: o /) → 3r Sumes (+) i Restes (−) d'esquerra a dreta.",
+                    prompt: "Resol l'operació línia a línia aplicant l'ordre de prioritat:",
+                    highlight: chosen.expr,
+                    type: 'step_by_step',
+                    expectedSteps: chosen.expectedSteps,
+                    correctAnswer: chosen.ans.toString(),
+                    explanation: chosen.steps
+                };
+            },
+
+            // 2.2 Transcriure Problemes a Operacions Combinades (Nivell Cicle Superior avançat)
+            word_problems: () => {
+                const templates = [
+                    // 1. Doble compra menys descompte/retorn
+                    () => {
+                        const samarretes = randInt(3, 5);
+                        const preuSam = randInt(14, 22);
+                        const pantalons = randInt(2, 4);
+                        const preuPant = randInt(25, 38);
+                        const valDescompte = randInt(10, 20);
+                        return {
+                            text: `Per equipar l'equip de bàsquet comprem ${samarretes} samarretes a ${preuSam} € cada una i ${pantalons} pantalons a ${preuPant} € cada un. Si ens apliquen un val de descompte de ${valDescompte} € sobre el total de la compra, quina operació calcula l'import final a pagar?`,
+                            correct: `${samarretes} × ${preuSam} + ${pantalons} × ${preuPant} − ${valDescompte}`,
+                            fakes: [
+                                `${samarretes} × (${preuSam} + ${pantalons}) × ${preuPant} − ${valDescompte}`,
+                                `(${samarretes} + ${pantalons}) × (${preuSam} + ${preuPant}) − ${valDescompte}`,
+                                `${samarretes} × ${preuSam} + ${pantalons} × (${preuPant} − ${valDescompte})`
+                            ],
+                            exp: `Calculem el cost de les samarretes (${samarretes} × ${preuSam}) més el dels pantalons (${pantalons} × ${preuPant}) i al resultat li restem el val de ${valDescompte} €.`
+                        };
+                    },
+                    // 2. Recaptació total amb dos tipus d'entrades repartida entre projectes (parèntesi + divisió)
+                    () => {
+                        const adults = randInt(12, 20);
+                        const preuAdult = 8;
+                        const infants = randInt(15, 25);
+                        const preuInfant = 4;
+                        const projectes = pickRandom([2, 4]);
+                        // El total (adults*8 + infants*4) sempre és múltiple de 4 (i de 2), així que la divisió és exacta!
+                        return {
+                            text: `Al teatre de l'escola s'han venut ${adults} entrades d'adult a ${preuAdult} € i ${infants} entrades infantils a ${preuInfant} €. Tots els diners recaptats es reparteixen a parts iguals entre ${projectes} associacions solidàries. Quants euros rep cada associació?`,
+                            correct: `(${adults} × ${preuAdult} + ${infants} × ${preuInfant}) : ${projectes}`,
+                            fakes: [
+                                `${adults} × ${preuAdult} + ${infants} × ${preuInfant} : ${projectes}`,
+                                `(${adults} + ${infants}) × (${preuAdult} + ${preuInfant}) : ${projectes}`,
+                                `${adults} × (${preuAdult} + ${infants}) × ${preuInfant} : ${projectes}`
+                            ],
+                            exp: `Primer hem d'agrupar amb parèntesis tota la recaptació (${adults} × ${preuAdult} + ${infants} × ${preuInfant}) abans de dividir-ho entre les ${projectes} associacions.`
+                        };
+                    },
+                    // 3. Producció amb minves i repartiment en lots (parèntesi + multiplicació + divisió)
+                    () => {
+                        const arbres = randInt(6, 12);
+                        const pomesArbre = randInt(35, 50);
+                        const malmeses = randInt(12, 24);
+                        const capacitatCaixa = pickRandom([6, 8, 10]);
+                        // Ajustem malmeses perquè el resultat sigui divisible per capacitatCaixa
+                        const totalBrut = arbres * pomesArbre;
+                        const residu = (totalBrut - malmeses) % capacitatCaixa;
+                        const malmesesOk = malmeses + residu;
+                        return {
+                            text: `Un pagès cull ${pomesArbre} pomes de cadascun dels seus ${arbres} pomerers. Després de triar-les, n'ha de llençar ${malmesesOk} perquè tenen cops, i la resta les posa en caixes de ${capacitatCaixa} pomes. Quantes caixes omplirà?`,
+                            correct: `(${arbres} × ${pomesArbre} − ${malmesesOk}) : ${capacitatCaixa}`,
+                            fakes: [
+                                `${arbres} × ${pomesArbre} − ${malmesesOk} : ${capacitatCaixa}`,
+                                `${arbres} × (${pomesArbre} − ${malmesesOk}) : ${capacitatCaixa}`,
+                                `(${arbres} × ${pomesArbre} + ${malmesesOk}) : ${capacitatCaixa}`
+                            ],
+                            exp: `Calculem el total de pomes collides (${arbres} × ${pomesArbre}), hi restem les ${malmesesOk} dolentes dins del parèntesi, i el resultat el dividim per ${capacitatCaixa}.`
+                        };
+                    },
+                    // 4. Pressupost restant després de dues despeses combinades (resta d'un parèntesi)
+                    () => {
+                        const pressupost = randInt(250, 400);
+                        const dies = randInt(3, 5);
+                        const hotelDia = randInt(35, 55);
+                        const bitllets = randInt(40, 75);
+                        return {
+                            text: `La Marta té un pressupost de ${pressupost} € per a una escapada. Es gasta ${bitllets} € en els bitllets de tren i paga ${dies} nits d'hotel a ${hotelDia} € cada nit. Quina operació calcula els diners que li quedaran per a menjar?`,
+                            correct: `${pressupost} − (${bitllets} + ${dies} × ${hotelDia})`,
+                            fakes: [
+                                `${pressupost} − ${bitllets} + ${dies} × ${hotelDia}`,
+                                `(${pressupost} − ${bitllets} + ${dies}) × ${hotelDia}`,
+                                `${pressupost} − (${bitllets} + ${dies}) × ${hotelDia}`
+                            ],
+                            exp: `Al pressupost inicial (${pressupost} €) li hem de restar la suma de totes les despeses agrupades en un parèntesi: (${bitllets} + ${dies} × ${hotelDia}).`
+                        };
+                    },
+                    // 5. Doble parèntesi: compra conjunts complets (equipació o lots)
+                    () => {
+                        const alumnes = randInt(22, 28);
+                        const preuLlibre = randInt(16, 24);
+                        const preuQuadern = randInt(4, 7);
+                        const beques = randInt(3, 6);
+                        return {
+                            text: `A una classe de ${alumnes} alumnes, cada estudiant necessita un llibre de lectura de ${preuLlibre} € i un quadern d'activitats de ${preuQuadern} €. Si ${beques} alumnes tenen beca i no paguen res, quina operació calcula el cost total per a la resta de la classe?`,
+                            correct: `(${alumnes} − ${beques}) × (${preuLlibre} + ${preuQuadern})`,
+                            fakes: [
+                                `${alumnes} − ${beques} × (${preuLlibre} + ${preuQuadern})`,
+                                `(${alumnes} − ${beques}) × ${preuLlibre} + ${preuQuadern}`,
+                                `${alumnes} × (${preuLlibre} + ${preuQuadern}) − ${beques}`
+                            ],
+                            exp: `Necessitem dos parèntesis: un per saber quants alumnes paguen (${alumnes} − ${beques}) i un altre per saber quant costa el lot de cada alumne (${preuLlibre} + ${preuQuadern}).`
+                        };
+                    },
+                    // 6. Estalvi setmanal i repartiment d'un premi o paga
+                    () => {
+                        const setmanes = randInt(4, 8);
+                        const pagaSetmanal = randInt(6, 10);
+                        const avis = randInt(25, 45);
+                        const joc = randInt(30, 50);
+                        return {
+                            text: `En Pau ha estalviat la seva paga de ${pagaSetmanal} € durant ${setmanes} setmanes. A més, els seus avis li han regalat ${avis} € pel seu aniversari. Si es compra un videojoc que val ${joc} €, quina operació mostra quants diners li queden estalviats?`,
+                            correct: `${setmanes} × ${pagaSetmanal} + ${avis} − ${joc}`,
+                            fakes: [
+                                `${setmanes} × (${pagaSetmanal} + ${avis}) − ${joc}`,
+                                `${setmanes} × (${pagaSetmanal} + ${avis} − ${joc})`,
+                                `(${setmanes} + ${pagaSetmanal}) × ${avis} − ${joc}`
+                            ],
+                            exp: `Multipliquem les setmanes per la paga (${setmanes} × ${pagaSetmanal}), hi sumem el regal dels avis (+ ${avis}) i hi restem el preu del joc (− ${joc}).`
+                        };
+                    }
+                ];
+
+                const prob = pickRandom(templates)();
+                const options = [prob.correct, ...prob.fakes].sort(() => Math.random() - 0.5);
+
+                return {
+                    badge: "Resolució de Problemes",
+                    title: "Transcriure Problemes",
+                    hint: "Fixa't bé en l'ordre de les accions! Quan hagis d'agrupar dues quantitats abans de multiplicar o dividir (o restar un conjunt de despeses), fes servir els PARÈNTESIS.",
+                    prompt: prob.text,
+                    type: 'choice',
+                    options: options,
+                    correctAnswer: prob.correct,
+                    explanation: prob.exp
+                };
+            }
+        };
+
+        // --- RENDERITZAT DE PREGUNTES I VALIDACIÓ ---
+        function renderQuestion(q) {
+            document.getElementById('game-badge').textContent = q.badge;
+            document.getElementById('game-title').textContent = q.title;
+            document.getElementById('hint-text').textContent = q.hint;
+
+            const qContainer = document.getElementById('question-container');
+            let html = `<p class="text-base sm:text-lg text-slate-700 font-medium leading-relaxed">${q.prompt}</p>`;
+
+            if (q.highlight) {
+                html += `<div class="bg-indigo-50/80 border-2 border-indigo-100 rounded-2xl p-4 sm:p-6 text-center">
+                            <span class="font-display font-bold text-2xl sm:text-3xl text-indigo-950 tracking-wide break-words">${q.highlight}</span>
+                         </div>`;
+            } else if (q.highlightHtml) {
+                html += `<div class="bg-indigo-50/80 border-2 border-indigo-100 rounded-2xl p-4 sm:p-6 text-center">
+                            <span class="font-display font-bold text-3xl sm:text-4xl text-slate-800 tracking-wider">${q.highlightHtml}</span>
+                         </div>`;
+            }
+            qContainer.innerHTML = html;
+
+            const aContainer = document.getElementById('answer-container');
+            if (q.type === 'step_by_step') {
+                let stepsHtml = `<div class="space-y-4 bg-slate-50/80 p-4 sm:p-5 rounded-2xl border border-slate-200/80">
+                    <div class="flex items-center justify-between text-xs text-slate-500 border-b border-slate-200 pb-2">
+                        <span>Pots fer servir <kbd class="px-1.5 py-0.5 bg-white border rounded text-slate-700">*</kbd> o <kbd class="px-1.5 py-0.5 bg-white border rounded text-slate-700">x</kbd> per multiplicar i <kbd class="px-1.5 py-0.5 bg-white border rounded text-slate-700">:</kbd> o <kbd class="px-1.5 py-0.5 bg-white border rounded text-slate-700">/</kbd> per dividir.</span>
+                    </div>`;
+
+                q.expectedSteps.forEach((step, idx) => {
+                    stepsHtml += `
+                        <div class="space-y-1.5">
+                            <label for="step-input-${idx}" class="flex items-center gap-2 text-xs sm:text-sm font-bold text-indigo-900">
+                                <span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs">${idx + 1}</span>
+                                Pas ${idx + 1}
+                            </label>
+                            <div class="flex items-center gap-2">
+                                <span class="font-display font-bold text-xl text-slate-400">=</span>
+                                <input type="text" id="step-input-${idx}" autocomplete="off" placeholder="Escriu l'operació resultant..."
+                                    class="step-input w-full px-4 py-2.5 text-base sm:text-lg font-display font-semibold text-slate-800 bg-white border-2 border-slate-300 rounded-xl focus:outline-none focus:border-indigo-500 transition-colors"
+                                    onkeydown="if(event.key === 'Enter') { const next = document.getElementById('step-input-${idx + 1}') || document.getElementById('final-step-input'); next?.focus(); }">
+                            </div>
+                            <p id="step-msg-${idx}" class="hidden text-xs font-semibold pl-6"></p>
+                        </div>
+                    `;
+                });
+
+                const finalStepNum = q.expectedSteps.length + 1;
+                stepsHtml += `
+                    <div class="space-y-1.5 pt-2 border-t border-slate-200">
+                        <label for="final-step-input" class="flex items-center gap-2 text-xs sm:text-sm font-bold text-emerald-800">
+                            <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">${finalStepNum}</span>
+                            Pas ${finalStepNum} (Resultat final)
+                        </label>
+                        <div class="flex items-center gap-2">
+                            <span class="font-display font-bold text-xl text-emerald-600">=</span>
+                            <input type="text" id="final-step-input" autocomplete="off" placeholder="Resultat final..."
+                                class="w-full px-4 py-3 text-lg sm:text-xl font-display font-bold text-slate-800 bg-white border-2 border-emerald-300 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors"
+                                onkeydown="if(event.key === 'Enter') { state.answered ? nextQuestion() : checkAnswer(); }">
+                        </div>
+                        <p id="final-step-msg" class="hidden text-xs font-semibold pl-6"></p>
+                    </div>
+                </div>`;
+
+                aContainer.innerHTML = stepsHtml;
+                setTimeout(() => document.getElementById('step-input-0')?.focus(), 50);
+            } else if (q.type === 'input') {
+                aContainer.innerHTML = `
+                    <div>
+                        <label for="user-input" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">La teva resposta:</label>
+                        <input type="text" id="user-input" autocomplete="off" placeholder="${q.placeholder}" 
+                            class="w-full px-4 py-3.5 text-lg sm:text-xl font-display font-semibold text-slate-800 bg-slate-50 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white transition-colors"
+                            onkeydown="if(event.key === 'Enter') { state.answered ? nextQuestion() : checkAnswer(); }">
+                    </div>
+                `;
+                setTimeout(() => document.getElementById('user-input')?.focus(), 50);
+            } else if (q.type === 'choice') {
+                aContainer.innerHTML = `
+                    <div class="grid grid-cols-1 gap-3">
+                        ${q.options.map((opt, idx) => `
+                            <button type="button" onclick="selectOption(${idx}, this)" data-val="${opt.replace(/"/g, '&quot;')}"
+                                class="option-btn w-full text-left px-5 py-3.5 rounded-xl border-2 border-slate-200 hover:border-indigo-400 bg-white hover:bg-indigo-50/40 font-medium text-slate-700 text-base sm:text-lg transition-all flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 font-display font-bold text-sm flex items-center justify-center shrink-0">${String.fromCharCode(65 + idx)}</span>
+                                <span class="font-display">${opt}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function selectOption(idx, btnElement) {
+            if (state.answered) return;
+            state.selectedOption = btnElement.getAttribute('data-val');
+
+            document.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('border-indigo-600', 'bg-indigo-50', 'ring-2', 'ring-indigo-200');
+                b.classList.add('border-slate-200', 'bg-white');
+            });
+
+            btnElement.classList.remove('border-slate-200', 'bg-white');
+            btnElement.classList.add('border-indigo-600', 'bg-indigo-50', 'ring-2', 'ring-indigo-200');
+        }
+
+        function showFeedback(isCorrect, title, explanation) {
+            const box = document.getElementById('feedback-box');
+            const icon = document.getElementById('feedback-icon');
+            const titleEl = document.getElementById('feedback-title');
+            const expEl = document.getElementById('feedback-explanation');
+
+            box.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-900', 'border', 'border-emerald-200', 'bg-rose-50', 'text-rose-900', 'border-rose-200', 'animate-shake', 'animate-pop');
+
+            if (isCorrect) {
+                box.classList.add('bg-emerald-50', 'text-emerald-900', 'border', 'border-emerald-200', 'animate-pop');
+                icon.textContent = '🎉';
+            } else {
+                box.classList.add('bg-rose-50', 'text-rose-900', 'border', 'border-rose-200', 'animate-shake');
+                icon.textContent = '🤔';
+            }
+
+            titleEl.textContent = title;
+            expEl.textContent = explanation;
+        }
+
+        // Normalitza expressions matemàtiques escrites per l'alumne per comparar-les sense problemes d'espais o símbols
+        function normalizeMathExpr(str) {
+            return str
+                .replace(/\s+/g, '')
+                .replace(/[×xX·]/g, '*')
+                .replace(/[÷\/]/g, ':')
+                .replace(/[–—−]/g, '-');
+        }
+
+        function checkAnswer() {
+            if (state.answered) return;
+            const q = state.currentQuestion;
+            let userVal = null;
+
+            if (q.type === 'step_by_step') {
+                // Comprovem que no hi hagi camps buits
+                let hasEmpty = false;
+                q.expectedSteps.forEach((_, idx) => {
+                    const el = document.getElementById(`step-input-${idx}`);
+                    if (!el.value.trim()) {
+                        hasEmpty = true;
+                        el.classList.add('animate-shake', 'border-rose-400');
+                        setTimeout(() => el.classList.remove('animate-shake', 'border-rose-400'), 400);
+                    }
+                });
+                const finalEl = document.getElementById('final-step-input');
+                if (!finalEl.value.trim()) {
+                    hasEmpty = true;
+                    finalEl.classList.add('animate-shake', 'border-rose-400');
+                    setTimeout(() => finalEl.classList.remove('animate-shake', 'border-rose-400'), 400);
+                }
+                if (hasEmpty) return;
+
+                // Validem cada pas intermèdia i el resultat final
+                let allStepsOk = true;
+                q.expectedSteps.forEach((step, idx) => {
+                    const el = document.getElementById(`step-input-${idx}`);
+                    const msgEl = document.getElementById(`step-msg-${idx}`);
+                    el.disabled = true;
+
+                    const userNorm = normalizeMathExpr(el.value);
+                    const validNorms = step.validForms.map(f => normalizeMathExpr(f));
+                    const isStepOk = validNorms.includes(userNorm);
+
+                    msgEl.classList.remove('hidden');
+                    if (isStepOk) {
+                        el.classList.remove('border-slate-300');
+                        el.classList.add('border-emerald-500', 'bg-emerald-50/40');
+                        msgEl.classList.add('text-emerald-700');
+                        msgEl.textContent = "✓ Pas correcte!";
+                    } else {
+                        allStepsOk = false;
+                        el.classList.remove('border-slate-300');
+                        el.classList.add('border-rose-500', 'bg-rose-50/40');
+                        msgEl.classList.add('text-rose-700');
+                        msgEl.textContent = `✗ Hauria de ser: ${step.validForms[0]}`;
+                    }
+                });
+
+                finalEl.disabled = true;
+                const finalMsgEl = document.getElementById('final-step-msg');
+                finalMsgEl.classList.remove('hidden');
+                const isFinalOk = cleanNumberInput(finalEl.value) === q.correctAnswer;
+
+                if (isFinalOk) {
+                    finalEl.classList.remove('border-emerald-300');
+                    finalEl.classList.add('border-emerald-500', 'bg-emerald-50/40');
+                    finalMsgEl.classList.add('text-emerald-700');
+                    finalMsgEl.textContent = "✓ Resultat final correcte!";
+                } else {
+                    allStepsOk = false;
+                    finalEl.classList.remove('border-emerald-300');
+                    finalEl.classList.add('border-rose-500', 'bg-rose-50/40');
+                    finalMsgEl.classList.add('text-rose-700');
+                    finalMsgEl.textContent = `✗ El resultat final és ${q.correctAnswer}`;
+                }
+
+                state.answered = true;
+                if (allStepsOk) {
+                    state.streak += 1;
+                    const bonus = state.streak >= 3 ? 20 : 15;
+                    state.score += bonus;
+                    updateScoreUI();
+                    showFeedback(true, `Excel·lent! Has resolt tots els passos bé (+${bonus} punts)`, q.explanation);
+                    if (state.streak % 5 === 0 && typeof confetti === 'function') {
+                        confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 } });
+                    }
+                } else {
+                    state.streak = 0;
+                    updateScoreUI();
+                    showFeedback(false, `Revisa els passos marcats en vermell!`, q.explanation);
+                }
+
+                document.getElementById('check-btn').classList.add('hidden');
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('next-btn').focus();
+                return;
+            }
+
+            if (q.type === 'input') {
+                const inputEl = document.getElementById('user-input');
+                userVal = cleanNumberInput(inputEl.value);
+                if (!userVal) {
+                    inputEl.classList.add('animate-shake', 'border-rose-400');
+                    setTimeout(() => inputEl.classList.remove('animate-shake', 'border-rose-400'), 400);
+                    return;
+                }
+                inputEl.disabled = true;
+            } else if (q.type === 'choice') {
+                if (!state.selectedOption) {
+                    const container = document.getElementById('answer-container');
+                    container.classList.add('animate-shake');
+                    setTimeout(() => container.classList.remove('animate-shake'), 400);
+                    return;
+                }
+                userVal = state.selectedOption;
+            }
+
+            state.answered = true;
+            const isCorrect = (userVal === q.correctAnswer);
+
+            // Actualitzem estil de les opcions múltiples
+            if (q.type === 'choice') {
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const val = btn.getAttribute('data-val');
+                    btn.disabled = true;
+                    if (val === q.correctAnswer) {
+                        btn.classList.remove('border-slate-200', 'border-indigo-600', 'bg-indigo-50');
+                        btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                    } else if (val === userVal && !isCorrect) {
+                        btn.classList.remove('border-indigo-600', 'bg-indigo-50');
+                        btn.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900');
+                    }
+                });
+            }
+
+            if (isCorrect) {
+                state.streak += 1;
+                const bonus = state.streak >= 3 ? 15 : 10;
+                state.score += bonus;
+                updateScoreUI();
+                showFeedback(true, `Molt bé! (+${bonus} punts)`, q.explanation);
+
+                if (state.streak % 5 === 0 && typeof confetti === 'function') {
+                    confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 } });
+                }
+            } else {
+                state.streak = 0;
+                updateScoreUI();
+                const formattedCorrect = q.type === 'input' ? formatNumber(q.correctAnswer) : q.correctAnswer;
+                showFeedback(false, `Gairebé! La resposta correcta era: ${formattedCorrect}`, q.explanation);
+            }
+
+            document.getElementById('check-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('next-btn').focus();
+        }
+    </script>
+</body>
+</html>
